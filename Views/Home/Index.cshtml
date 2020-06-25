@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<link rel="stylesheet" type="text/css" href="~/css/dataTables.bootstrap4.css">
+
+<script src="~/lib/DataTables/jquery.dataTables.js"></script>
+<script src="~/lib/DataTables/dataTables.bootstrap4.js"></script>
+
+<script src="~/js/HomeIndexVM.js"></script>
+<script>
+
+    $( document ).ready( function() {
+        $.ajaxSetup( { cache: false } );
+        /*
+        ko.validation.init({
+            insertMessages: true,
+            errorElementClass: 'text-danger'
+        }, true );
+        */
+        //ko.validation.locale('es-ES');
+
+        var mainVM = new HomeIndexVM();
+
+        var element = document.getElementById( "page" );
+
+        ko.applyBindings( mainVM, element );
+
+    } )
+</script>
+
+
+<div id="page">
+    <div class="text-center">
+        <h1 class="display-4">Films</h1>
+        <button type="button" class="btn" data-bind="click:DoCreateFilm">Add</button>
+        <table class="table table-striped" id="Films" width="100%" cellspacing="0">
+        </table>
+    </div>
+    <div class="modal fade" id="EditFilmDlg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Film</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            id="EditFilmDlgCloseBtn">
+                        <span aria-hidden="true"><img src="~/img/cerrar-modal.png"></span>
+                    </button>
+                </div>               
+                    <div class="modal-body" id="EditFilmDlg_body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <img id="posterImage" alt="your image"                                          
+                                         data-bind="attr:{src: Image}"
+                                         style="height:200px;width:200px"/>
+                                    <label for="poster">Poster</label>
+                                    <input class="form-control btn" id="poster"
+                                           data-bind="enable: IsEditable" type="file">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input class="form-control" id="name"
+                                           data-bind="textInput: Name, enable: IsEditable" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="year">Year</label>
+                                    <input class="form-control" id="year"
+                                           data-bind="textInput: Year, enable: IsEditable" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="produces">Producer</label>
+                                    <input class="form-control" id="producer"
+                                           data-bind="textInput: Producer, enable: IsEditable" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea rows="3" class="form-control" id="description"
+                                              data-bind="textInput: Description, enable: IsEditable" type="text"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" data-bind="click: SaveFilm, visible: IsEditable" class="btn" value="Save" />
+                    </div>                
+            </div>
+        </div>
+    </div>
+</div>
