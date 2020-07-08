@@ -111,9 +111,10 @@ namespace DonLEonFilms.Data
        /// <param name="_this"></param>
        /// <param name="userId"></param>
        /// <param name="id"></param>
-       public static void DeleteFilm( this ApplicationDbContext _this,
+       public static String DeleteFilm( this ApplicationDbContext _this,
                                       String userId, Int32 id )
        {
+            String file_name = String.Empty;
 
             var film_bbdd = _this.Films.Where( f => f.Id == id ).FirstOrDefault();
             if( null == film_bbdd )
@@ -126,8 +127,12 @@ namespace DonLEonFilms.Data
                 throw new Exception( "Film '{0}' cannot be  deleted " );
             }
 
+            file_name = film_bbdd.FileName; // for delete
+
             _this.Films.Remove( film_bbdd );
             _this.SaveChanges();
+
+            return file_name;
        }
 
 
@@ -161,14 +166,18 @@ namespace DonLEonFilms.Data
                 IsReadOnly = ( String.Compare(userId, film_bbdd.ApplicationUserId, true ) != 0 )
             };
         }
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="_this"></param>
-       /// <param name="model"></param>
-       /// <param name="userId"></param>
-       public static void UpdateFilm( this ApplicationDbContext  _this, FilmModel model, String userId )
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_this"></param>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+       public static String UpdateFilm( this ApplicationDbContext _this, FilmModel model, String userId )
        {
+            String old_file = String.Empty; // old file name
+
             Film film_bbdd = null;
             if( model.Id == 0 )
             {
@@ -195,13 +204,14 @@ namespace DonLEonFilms.Data
                 if( 0 != String.Compare(film_bbdd.ApplicationUserId, userId, true ) )
                 { // NO EDIT RIGHT
                     throw new Exception( String.Format("No edit rights '{0}'", film_bbdd.Name ) );
-                }
+                }                
 
                 // Update
                 film_bbdd.Name = model.Name;
                 if( false == String.IsNullOrWhiteSpace( model.FileName ) )
                 {
-                    film_bbdd.FileName = model.FileName;
+                    old_file = film_bbdd.FileName;
+                    film_bbdd.FileName = model.FileName;                    
                 }
                 film_bbdd.Producer = model.Producer;
                 film_bbdd.Description = model.Description;
@@ -209,6 +219,8 @@ namespace DonLEonFilms.Data
             }
 
             _this.SaveChanges();
+
+            return old_file;
        }
 
         #region MAPS

@@ -193,8 +193,8 @@
 
         $.ajax( {
             url: ajax_url,
-            data: JSON.stringify( id ),
-            type: 'POST',
+            data: { id: id },
+            type: 'GET',
             contentType: 'application/json; charset=utf-8',
             success: function( data ) {
 
@@ -247,7 +247,7 @@
                 $.ajax( {
                     url: ajax_url,
                     data: JSON.stringify( data_row[0].id ),
-                    type: 'POST',
+                    type: 'DELETE',
                     //dataType: 'JSON',
                     contentType: 'application/json; charset=utf-8',
                     success: function( data ) {
